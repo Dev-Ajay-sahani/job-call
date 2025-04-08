@@ -1,0 +1,29 @@
+name: Daily Donation Tracker
+
+on:
+  schedule:
+    - cron: '30 18 * * *'  # Runs at 12:00 AM IST (UTC+5:30)
+  workflow_dispatch:        # Optional: manual run
+
+jobs:
+  update-donations:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Run donation tracker
+      run: node cron.js
+      env:
+        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+        SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        COC_TOKEN: ${{ secrets.COC_TOKEN }}
